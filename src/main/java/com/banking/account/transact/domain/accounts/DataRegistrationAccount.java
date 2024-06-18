@@ -4,15 +4,21 @@ import com.banking.account.transact.domain.transaction.DataRegistrationTransacti
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import java.util.List;
 
 public record DataRegistrationAccount(
+//        @NotBlank
+//        Long id,
         @NotBlank
-        int numero_conta,
+        @Pattern(regexp = "\\d{3,6}")
+        String numero_conta,
         @NotBlank
-        Double saldo,
-        @NotNull
-        @Valid
-        List<DataRegistrationTransaction> transactions) {
+        Double saldo
+//        Double saldo,
+//        @NotNull
+//        @Valid
+//        List<DataRegistrationTransaction> transactions
+) {
 }

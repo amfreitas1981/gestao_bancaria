@@ -1,12 +1,17 @@
 package com.banking.account.transact.domain.transaction;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 public record DataRegistrationTransaction(
         @NotNull
-        PaymentFormEnum paymentFormEnum,
+        PaymentFormEnum forma_pagamento,
+//        @NotNull
+//        @Pattern(regexp = "\\d{3,6}")
+        String numero_conta,
         @NotNull
-        int numero_conta,
-        @NotNull
-        int valor) {
+        Double valor
+//        ,
+//        Double saldo
+) {
 }
