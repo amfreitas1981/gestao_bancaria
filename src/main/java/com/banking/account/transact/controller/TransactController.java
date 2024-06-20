@@ -3,7 +3,7 @@ package com.banking.account.transact.controller;
 import com.banking.account.transact.domain.transaction.DataDetailingTransaction;
 import com.banking.account.transact.domain.transaction.DataRegistrationTransaction;
 import com.banking.account.transact.domain.transaction.Transaction;
-import com.banking.account.transact.domain.transaction.TransactionRepository;
+import com.banking.account.transact.domain.transaction.TransactionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,18 +17,21 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("transacao")
-//@SecurityRequirement(name = "bearer-key")
+@SecurityRequirement(name = "bearer-key")
 public class TransactController {
 
-    @Autowired
-    private TransactionRepository transactionRepository;
+//    @Autowired
+//    private TransactionRepository transactionRepository;
 
-    // Criar método POST
+    @Autowired
+    private TransactionService transactionService;
+
     @PostMapping
     @Transactional
     public ResponseEntity createTransaction(@RequestBody @Valid DataRegistrationTransaction data, UriComponentsBuilder uriBuilder){
         var transaction = new Transaction(data);
-        transactionRepository.save(transaction);
+//        transactionRepository.save(transaction);
+        transactionService.saveTransaction(transaction);
         var uri = uriBuilder.path("/transacao/{id}").buildAndExpand(transaction.getId()).toUri();
 
         return ResponseEntity.created(uri).body(new DataDetailingTransaction(transaction));

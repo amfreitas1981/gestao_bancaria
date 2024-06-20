@@ -8,30 +8,30 @@ package com.banking.account.transact.domain.transaction;
 //import static org.junit.jupiter.api.Assertions.assertNotNull;
 //import static org.junit.jupiter.api.Assertions.assertThrows;
 //
-//class PaymentFormEnumTest {
+//class PaymentFormTest {
 //
 //    @Test
 //    @DisplayName("Conversão de String para Enum com sucesso, informando uma letra para identificar a forma de pagamento correta, prevista, nas regras de negócio")
 //    public void testFromStringSuccess(){
-//        assertNotNull(PaymentFormEnum.P);
-//        assertNotNull(PaymentFormEnum.valueOf("P"));
-//        assertEquals(PaymentFormEnum.P, PaymentFormEnum.fromString("P"));
-//        assertNotEquals("X", PaymentFormEnum.P.name());
+//        assertNotNull(PaymentForm.P);
+//        assertNotNull(PaymentForm.valueOf("P"));
+//        assertEquals(PaymentForm.P, PaymentForm.fromString("P"));
+//        assertNotEquals("X", PaymentForm.P.name());
 //
-//        assertNotNull(PaymentFormEnum.C);
-//        assertNotNull(PaymentFormEnum.valueOf("C"));
-//        assertEquals(PaymentFormEnum.C, PaymentFormEnum.fromString("C"));
-//        assertNotEquals("Y", PaymentFormEnum.C.name());
+//        assertNotNull(PaymentForm.C);
+//        assertNotNull(PaymentForm.valueOf("C"));
+//        assertEquals(PaymentForm.C, PaymentForm.fromString("C"));
+//        assertNotEquals("Y", PaymentForm.C.name());
 //
-//        assertNotNull(PaymentFormEnum.D);
-//        assertNotNull(PaymentFormEnum.valueOf("D"));
-//        assertEquals(PaymentFormEnum.D, PaymentFormEnum.fromString("D"));
-//        assertNotEquals("Z", PaymentFormEnum.D.name());
+//        assertNotNull(PaymentForm.D);
+//        assertNotNull(PaymentForm.valueOf("D"));
+//        assertEquals(PaymentForm.D, PaymentForm.fromString("D"));
+//        assertNotEquals("Z", PaymentForm.D.name());
 //    }
 //
 //    @Test
 //    @DisplayName("Conversão de String para Enum com falha, informando uma letra qualquer para tentar identificar alguma forma de pagamento, considerada inexistente para a regra de negócio")
 //    public void testFromStringFailure() {
-//        assertThrows(IllegalArgumentException.class, () -> PaymentFormEnum.fromString("L"));
+//        assertThrows(IllegalArgumentException.class, () -> PaymentForm.fromString("L"));
 //    }
 //}

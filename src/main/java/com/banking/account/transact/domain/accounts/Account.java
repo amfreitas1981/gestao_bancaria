@@ -1,21 +1,14 @@
 package com.banking.account.transact.domain.accounts;
 
 import com.banking.account.transact.domain.transaction.Transaction;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.List;
 
 @Table(name = "contas")
 @Entity(name = "Account")
+@Setter
 @Getter
 @Builder
 @NoArgsConstructor
@@ -23,7 +16,9 @@ import java.util.List;
 @EqualsAndHashCode(of = "id")
 public class Account {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 //    @OneToOne(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -35,6 +30,9 @@ public class Account {
     private Double saldo;
 
     private Boolean ativo;
+
+//    @OneToOne(fetch = FetchType.LAZY)
+//    private Transaction transaction;
 
     public Account(DataRegistrationAccount data){
         this.numero_conta = data.numero_conta();

@@ -1,7 +1,7 @@
 package com.banking.account.transact.util;
 
 //import com.banking.account.transact.domain.accounts.Account;
-//import com.banking.account.transact.domain.transaction.PaymentFormEnum;
+//import com.banking.account.transact.domain.transaction.PaymentForm;
 //import com.banking.account.transact.domain.transaction.Transaction;
 //
 //import java.util.Collections;
@@ -12,7 +12,7 @@ package com.banking.account.transact.util;
 //    public static List<Transaction> transactions = Collections.singletonList(new Transaction(
 //            3L,
 //            Account.builder().build(),
-//            PaymentFormEnum.C,
+//            PaymentForm.C,
 //            1564,
 //            40
 //    ));
@@ -29,7 +29,7 @@ package com.banking.account.transact.util;
 //        return new Transaction(
 //                null,
 //                account,
-//                PaymentFormEnum.P,
+//                PaymentForm.P,
 //                123,
 //                10
 //        );
@@ -39,7 +39,7 @@ package com.banking.account.transact.util;
 //        return new Transaction(
 //                1L,
 //                account,
-//                PaymentFormEnum.P,
+//                PaymentForm.P,
 //                123,
 //                10
 //        );
@@ -49,7 +49,7 @@ package com.banking.account.transact.util;
 //        return new Transaction(
 //                1L,
 //                account,
-//                PaymentFormEnum.D,
+//                PaymentForm.D,
 //                111,
 //                11
 //        );

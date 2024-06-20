@@ -5,7 +5,7 @@ import com.banking.account.transact.domain.accounts.DataDetailingAccount;
 
 public record DataDetailingTransaction(
         Long id,
-        PaymentFormEnum forma_pagamento,
+        PaymentForm forma_pagamento,
 //        String numero_conta,
         Double valor
 //        Double saldo

@@ -2,7 +2,7 @@ package com.banking.account.transact.util;
 
 //import com.banking.account.transact.domain.accounts.DataRegistrationAccount;
 //import com.banking.account.transact.domain.transaction.DataRegistrationTransaction;
-//import com.banking.account.transact.domain.transaction.PaymentFormEnum;
+//import com.banking.account.transact.domain.transaction.PaymentForm;
 //
 //import java.util.Collections;
 //import java.util.List;
@@ -10,7 +10,7 @@ package com.banking.account.transact.util;
 //public class DataRegistrationAccountCreator {
 //
 //    public static List<DataRegistrationTransaction> dataRegistrationTransaction = Collections.singletonList(new DataRegistrationTransaction(
-//            PaymentFormEnum.P,
+//            PaymentForm.P,
 //            234,
 //            10
 //    ));

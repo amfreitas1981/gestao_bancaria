@@ -2,13 +2,7 @@ package com.banking.account.transact.domain.transaction;
 
 import com.banking.account.transact.domain.accounts.Account;
 import com.banking.account.transact.domain.accounts.DataDetailingAccount;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -24,7 +18,9 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(of = "id")
 public class Transaction {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 //    @OneToOne(fetch = FetchType.EAGER)
@@ -32,13 +28,20 @@ public class Transaction {
 //    private Account account;
 
     @Enumerated(EnumType.STRING)
-    private PaymentFormEnum forma_pagamento;
+    private PaymentForm forma_pagamento;
 
     private String numero_conta;
 
     private Double valor;
 
     private Double saldo;
+
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "id")
+//    private Account account;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contas_id")
+    private Account account;
 
     public Transaction(DataRegistrationTransaction data) {
         this.forma_pagamento = data.forma_pagamento();

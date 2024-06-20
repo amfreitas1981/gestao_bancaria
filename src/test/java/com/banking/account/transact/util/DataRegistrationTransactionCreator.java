@@ -1,13 +1,13 @@
 package com.banking.account.transact.util;
 
 //import com.banking.account.transact.domain.transaction.DataRegistrationTransaction;
-//import com.banking.account.transact.domain.transaction.PaymentFormEnum;
+//import com.banking.account.transact.domain.transaction.PaymentForm;
 //
 //public class DataRegistrationTransactionCreator {
 //
 //    public static DataRegistrationTransaction createDataRegistrationTransactionToBeSaved(){
 //        return new DataRegistrationTransaction(
-//                PaymentFormEnum.P,
+//                PaymentForm.P,
 //                234,
 //                10
 //        );
@@ -15,7 +15,7 @@ package com.banking.account.transact.util;
 //
 //    public static DataRegistrationTransaction createDataRegistrationTransactionValid(){
 //        return new DataRegistrationTransaction(
-//                PaymentFormEnum.C,
+//                PaymentForm.C,
 //                235,
 //                11
 //        );
@@ -23,7 +23,7 @@ package com.banking.account.transact.util;
 //
 //    public static DataRegistrationTransaction createDataRegistrationTransactionValidUpdate(){
 //        return new DataRegistrationTransaction(
-//                PaymentFormEnum.D,
+//                PaymentForm.D,
 //                236,
 //                12
 //        );
