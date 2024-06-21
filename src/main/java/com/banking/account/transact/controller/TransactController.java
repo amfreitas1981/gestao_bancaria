@@ -27,7 +27,6 @@ public class TransactController {
     @Transactional
     public ResponseEntity createTransaction(@RequestBody @Valid DataRegistrationTransaction data, UriComponentsBuilder uriBuilder){
         var transaction = new Transaction(data);
-//        transactionRepository.save(transaction);
 
         if (transaction.getSaldo() < transaction.getValor()) {
             return ResponseEntity.notFound().build();

@@ -99,7 +99,7 @@ que será visto mais adiante.
 Os tratamentos aplicados para regra de negócio, foram implementados na classe AccountService, que, por sua
 vez, efetua as chamadas para a interface AccountRepository, onde carregam todo acesso ao Banco de Dados, 
 conduzido pela classe de entidade.
-O endpoint adotado para esse processo é "**/contas**".
+O endpoint adotado para esse processo é "**/conta**".
 
 > ##### Quarto Passo: Criação das classes JPA e seus relacionamentos #####
 Neste passo, foram criadas as classes Account e Transaction, basicamente, utilizando o relacionamento um 

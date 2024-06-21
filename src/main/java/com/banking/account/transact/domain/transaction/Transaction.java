@@ -10,7 +10,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -33,10 +32,6 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @OneToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "contas_id")
-//    private Account account;
-
     @Enumerated(EnumType.STRING)
     private PaymentForm forma_pagamento;
 
@@ -46,10 +41,6 @@ public class Transaction {
 
     private Double saldo;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "id")
-//    private Account account;
-//@JoinColumn(name = "contas_id")
     @OneToOne(fetch = FetchType.LAZY)
     private Account account;
 
@@ -63,8 +54,4 @@ public class Transaction {
         this.numero_conta = data.numero_conta();
         this.saldo = data.saldo();
     }
-
-//    public void setAccount(Account account) {
-//        this.account = account;
-//    }
 }
