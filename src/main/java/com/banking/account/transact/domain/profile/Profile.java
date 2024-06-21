@@ -14,7 +14,7 @@ public class Profile implements GrantedAuthority {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String nome;
 
     public Long getId() {
         return id;
@@ -22,6 +22,6 @@ public class Profile implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return name;
+        return nome;
     }
 }

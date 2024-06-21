@@ -17,7 +17,7 @@ import java.util.List;
 public class UsernameService implements UserDetailsService {
 
     @Autowired
-    private UsernameRepository usernameRepository;
+    private UsernameRepository usuarioRepository;
 
     @Autowired
     private ProfileRepository profileRepository;
@@ -27,36 +27,35 @@ public class UsernameService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        return this.usernameRepository.findByLogin(login);
+        return this.usuarioRepository.findByLogin(login);
     }
 
-    public DataUsername register(DataUserRegistration data){
-        var emailAlreadyRegister = this.usernameRepository.existsByLogin(data.login());
-        if (emailAlreadyRegister) {
-            throw new ValidationException("E-mail was already register for another username!");
+    public DataUsername register(DataUserRegistration dados) {
+        var emailJaCadastrado = this.usuarioRepository.existsByLogin(dados.login());
+        if (emailJaCadastrado) {
+            throw new ValidationException("E-mail já cadastrado para outro usuário!");
         }
 
-        var passwordBCrypt = passwordEncoder.encode(data.password());
-        var profiles = loadProfiles(data.admin());
+        var senhaBCrypt = passwordEncoder.encode(dados.password());
+        var perfis = carregarPerfis(dados.admin());
 
-        var username = new Username(data, passwordBCrypt, profiles);
+        var usuario = new Username(dados, senhaBCrypt, perfis);
 
-        this.usernameRepository.save(username);
+        this.usuarioRepository.save(usuario);
 
-        return new DataUsername(username);
+        return new DataUsername(usuario);
     }
 
-    private List<Profile> loadProfiles(Boolean admin) {
-        var profiles = new ArrayList<Profile>();
+    private List<Profile> carregarPerfis(Boolean admin) {
+        var perfis = new ArrayList<Profile>();
 
-        if (admin != null && admin == true){
-            var profileAdmin = profileRepository.findByName("ROLE_ADMIN");
-            profiles.add(profileAdmin);
+        if (admin != null && admin == true) {
+            var perfilAdmin = profileRepository.findByNome("ROLE_ADMIN");
+            perfis.add(perfilAdmin);
         }
+        var perfilUser = profileRepository.findByNome("ROLE_USER");
+        perfis.add(perfilUser);
 
-        var profileUser = profileRepository.findByName("ROLE_USER");
-        profiles.add(profileUser);
-
-        return profiles;
+        return perfis;
     }
 }

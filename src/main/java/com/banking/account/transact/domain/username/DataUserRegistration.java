@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public record DataUserRegistration(
         @NotBlank(message = "Name is mandatory field")
-        String name,
+        String nome,
         @NotBlank(message = "E-mail is mandatory field")
         @Email(message = "E-mail in invalid format")
         String login,

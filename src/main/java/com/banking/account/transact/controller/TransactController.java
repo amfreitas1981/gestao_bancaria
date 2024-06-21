@@ -20,9 +20,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 @SecurityRequirement(name = "bearer-key")
 public class TransactController {
 
-//    @Autowired
-//    private TransactionRepository transactionRepository;
-
     @Autowired
     private TransactionService transactionService;
 
@@ -31,6 +28,11 @@ public class TransactController {
     public ResponseEntity createTransaction(@RequestBody @Valid DataRegistrationTransaction data, UriComponentsBuilder uriBuilder){
         var transaction = new Transaction(data);
 //        transactionRepository.save(transaction);
+
+        if (transaction.getSaldo() < transaction.getValor()) {
+            return ResponseEntity.notFound().build();
+        }
+
         transactionService.saveTransaction(transaction);
         var uri = uriBuilder.path("/transacao/{id}").buildAndExpand(transaction.getId()).toUri();
 

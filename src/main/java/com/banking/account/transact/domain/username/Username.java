@@ -27,30 +27,30 @@ public class Username implements UserDetails {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String nome;
     private String login;
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "usernames_profiles", joinColumns = @JoinColumn(name = "username_id"), inverseJoinColumns = @JoinColumn(name = "profile_id"))
-    private List<Profile> profiles = new ArrayList<>();
+    @JoinTable(name = "usuarios_perfis", joinColumns = @JoinColumn(name = "usuario_id"), inverseJoinColumns = @JoinColumn(name = "perfil_id"))
+    private List<Profile> perfis = new ArrayList<>();
 
-    public Username(){
+    public Username() {
     }
 
-    public Username(DataUserRegistration data, String password, List<Profile> profiles){
-        this.name = data.name();
-        this.login = data.login();
-        this.password = data.password();
-        this.profiles = profiles;
+    public Username(DataUserRegistration dados, String password, List<Profile> perfis){
+        this.nome = dados.nome();
+        this.login = dados.login();
+        this.password = password;
+        this.perfis = perfis;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getName(){
-        return name;
+    public String getNome() {
+        return nome;
     }
 
     public String getLogin() {
@@ -59,7 +59,7 @@ public class Username implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.profiles;
+        return this.perfis;
     }
 
     @Override

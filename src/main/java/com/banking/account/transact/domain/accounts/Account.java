@@ -39,10 +39,6 @@ public class Account {
         this.saldo = data.saldo();
 //        this.transactions = data.transactions().stream().map(Transaction::new).toList();
 //        this.transactions.forEach(d -> d.setAccount(this));
-        /*
-        * Campo chave, que pode ser utilizado para inativar uma conta, ao invés de remover em definitivo,
-        * como aconteceria no Banco de Dados, pensando em deleção.
-        */
         this.ativo = true;
     }
 
@@ -51,12 +47,6 @@ public class Account {
         this.saldo = data.saldo();
     }
 
-    /*
-     * Este método, mesmo que não seja utilizado para o desafio proposto, foi criado, pensando no
-     * sentido de remover uma conta, apenas para inativar (alterando de true, para false), ao validar
-     * quando verificar ou consultar no Banco de Dados, sem precisar remover de fato, permitindo reativar,
-     * quando precisar.
-     */
     public void deleteOrInvalidateInformations(){
         this.ativo = false;
     }

@@ -3,13 +3,6 @@ package com.banking.account.transact.domain.transaction;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum PaymentForm implements ComputeTransactionRepository {
-    /*
-    Use as seguintes siglas para as formas de pagamento:
-    P => Pix -> Não haverá custo na transação
-    C => Cartão de Crédito -> Deverá calcular 5% sobre o valor informado
-    D => Cartão de Débito -> Deverá calcular 3% sobre o valor informado
-    */
-
     P {
         @Override
         public double computeTaxTransaction(double valor){

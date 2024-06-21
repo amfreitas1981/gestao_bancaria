@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public record DataRegistrationTransaction(
+        Long id,
         @NotNull
         PaymentForm forma_pagamento,
 //        @NotNull

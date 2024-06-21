@@ -5,19 +5,27 @@ import com.banking.account.transact.domain.accounts.DataDetailingAccount;
 
 public record DataDetailingTransaction(
         Long id,
-        PaymentForm forma_pagamento,
-//        String numero_conta,
-        Double valor
-//        Double saldo
+//        PaymentForm forma_pagamento,
+        String numero_conta,
+//        Double valor
+        Double saldo
 ) {
 
-    public DataDetailingTransaction(Transaction transaction){
+    public DataDetailingTransaction(Account account){
+        this(
+                account.getId(),
+//                transaction.getForma_pagamento(),
+                account.getNumero_conta(),
+//                transaction.getValor()
+                account.getSaldo()
+        );
+    }
+
+    public DataDetailingTransaction(Transaction transaction) {
         this(
                 transaction.getId(),
-                transaction.getForma_pagamento(),
-//                transaction.getNumero_conta(),
-                transaction.getValor()
-//                transaction.getSaldo()
+                transaction.getNumero_conta(),
+                transaction.getSaldo()
         );
     }
 
