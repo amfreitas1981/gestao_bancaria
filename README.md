@@ -151,6 +151,11 @@ conduzido pela classe de entidade.
 O endpoint adotado para esse processo é "**/transacao**".
 
 > ##### Sexto Passo: Criação de Usuários e Serviços de Autenticação JWT #####
+Para validar o token, é utilizada a lógica abaixo:
+O JWT é dividido em 3 partes, header, payload e signature, separados pelo caractere de ponto. Por isso é necessário 
+validar se foi possível dividir ele em 3 partes.
+O JWT é codificado em Base64Url, por isso usamos o Base64 URL decoder para decodificar as partes, onde, caso a 
+decodificação falhe, é lançada uma exceção que é capturada para retornar false, negando a validade do token.
 Para acessar os métodos que a aplicação tem à disposição, com segurança, foi desenvolvido também serviços, 
 responsáveis para autenticação de validação, por meio de geração de token. As configurações estão localizadas
 nas packages domain.profile, domain.username e infra. Este processo, necessariamente é feito conforme a 
@@ -159,7 +164,8 @@ os usuários 'Administrador' e 'Teste'. Cada usuário, antes de navegar pela apl
 para autenticação, fornecendo os seguintes dados:
 + nome - Nome do usuário;
 + login - Uma conta de e-mail, que servirá como login;
-+ password - Deverá criar uma senha numérica. Após o cadastro, este dado será automaticamente criptografado, no formato BCrypt.
++ password - Deverá criar uma senha numérica. Após o cadastro, este dado será automaticamente criptografado, no 
+formato BCrypt.
 
 Para isso, foram incluídas as dependências abaixo:
 > 
