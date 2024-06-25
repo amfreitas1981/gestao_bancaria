@@ -25,12 +25,8 @@ public class TransactController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity createTransaction(@RequestBody @Valid DataRegistrationTransaction data, UriComponentsBuilder uriBuilder){
-        var transaction = new Transaction(data);
-
-        if (transaction.getSaldo() < transaction.getValor()) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<DataDetailingTransaction> createTransaction(@RequestBody @Valid DataRegistrationTransaction request, UriComponentsBuilder uriBuilder) {
+        var transaction = new Transaction(request);
 
         transactionService.saveTransaction(transaction);
         var uri = uriBuilder.path("/transacao/{id}").buildAndExpand(transaction.getId()).toUri();
