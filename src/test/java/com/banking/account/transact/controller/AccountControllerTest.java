@@ -50,10 +50,14 @@ class AccountControllerTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    @Test
-    @DisplayName("Deveria devolver código http 201, quando informações estão inválidas")
-    @WithMockUser
-    void createAccountScenario2() throws Exception {}
+//    @Test
+//    @DisplayName("Deveria devolver código http 201, quando informações estão inválidas")
+//    @WithMockUser
+//    void createAccountScenario2() throws Exception {
+//        DataRegistrationAccount dataRegistrationAccount = createDataRegistrationAccountValid();
+//
+//        when(accountService.saveAccount(any())).thenReturn(dataRegistrationAccount);
+//    }
 
     @Test
     @DisplayName("Deveria devolver código http 404, quando informações estão inválidas, conta não localizada")

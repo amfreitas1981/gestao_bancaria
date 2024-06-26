@@ -10,6 +10,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -42,6 +43,7 @@ public class Transaction {
     private Double saldo;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
     private Account account;
 
     public Transaction(DataRegistrationTransaction data) {
