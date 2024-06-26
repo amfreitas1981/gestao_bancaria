@@ -36,34 +36,29 @@ public class TransactionService {
 
         saldoInicial = optAccount.get().getSaldo();
 
-        if (saldoInicial < valorCalculado) {
-            throw new ValidationException("Transação não realizada. Saldo indisponível");
-        } else {
-            double saldo = 0.0;
-            saldo = saldoInicial - valorCalculado;
+        double saldo = 0.0;
+        saldo = saldoInicial - valorCalculado;
 
-            var account = new Account(optAccount.get().getId(), transactions.getNumero_conta(), saldo, true);
-            var saveAccount = accountRepository.save(account);
+        var account = new Account(optAccount.get().getId(), transactions.getNumero_conta(), saldo, true);
+        accountRepository.save(account);
 
-            boolean existsTransaction = false;
-            // Salvar a transação criada no Banco de Dados
-            if (optTransaction.isPresent()) {
-                if (!optTransaction.get().getId().equals(transactions.getId())) {
-                    existsTransaction = true;
-                }
+        boolean existsTransaction = false;
+        // Salvar a transação criada no Banco de Dados
+        if (optTransaction.isPresent()) {
+            if (!optTransaction.get().getId().equals(transactions.getId())) {
+                existsTransaction = true;
             }
-
-            Transaction saveTransaction;
-
-            if (existsTransaction) {
-                throw new ValidationException("Não houve registros de transações durante a operação. Id nulo ou inexistente.");
-            } else {
-                var transaction = new Transaction(transactions.getId(), transactions.getForma_pagamento(), transactions.getNumero_conta(), transactions.getValor(), saldo, account);
-                saveTransaction = transactionRepository.save(transaction);
-            }
-
-            return new DataDetailingTransaction(saveTransaction);
         }
+
+        Transaction saveTransaction;
+        if (existsTransaction) {
+            throw new ValidationException("Não houve registros de transações durante a operação. Id nulo ou inexistente.");
+        } else {
+            var transaction = new Transaction(transactions.getId(), transactions.getForma_pagamento(), transactions.getNumero_conta(), transactions.getValor(), saldo, account);
+            saveTransaction = transactionRepository.save(transaction);
+        }
+
+        return new DataDetailingTransaction(saveTransaction);
     }
 
     private double computeTaxTransaction(Transaction transactions) {
