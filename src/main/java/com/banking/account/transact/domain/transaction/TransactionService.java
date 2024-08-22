@@ -1,5 +1,7 @@
 package com.banking.account.transact.domain.transaction;
 
+import com.banking.account.transact.domain.AccountNotFoundException;
+import com.banking.account.transact.domain.NegativeBalanceException;
 import com.banking.account.transact.domain.ValidationException;
 import com.banking.account.transact.domain.accounts.Account;
 import com.banking.account.transact.domain.accounts.AccountRepository;
@@ -8,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,54 +25,53 @@ public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    public DataDetailingTransaction saveTransaction(Transaction transactions) {
-        if (transactions.getNumero_conta() == null) {
-            throw new ValidationException("Conta não cadastrada na base de dados.");
+    public DataDetailingTransaction saveTransaction(DataRegistrationTransaction data) {
+        // Validações e regras de negócio
+        if (data.numeroConta() == null) {
+            throw new AccountNotFoundException("Conta não cadastrada na base de dados.");
         }
 
-        Optional<Transaction> optTransaction = Optional.ofNullable(transactionRepository.findTransactionByAtivoTrue(transactions.getNumero_conta()));
+        var findAccount = accountRepository.findAccountByAtivoTrue(data.numeroConta());
+        if (findAccount == null || !findAccount.getAtivo()) {
+            throw new AccountNotFoundException("Conta não cadastrada na base de dados.");
+        }
 
-        var valorCalculado = computeTaxTransaction(transactions);
+        Optional<List<Transaction>> optTransaction = Optional.ofNullable(transactionRepository.findByAccountNumeroConta(data.numeroConta()));
 
-        Optional<Account> optAccount = Optional.ofNullable(accountRepository.findAccountByAtivoTrue(transactions.getNumero_conta()));
+        BigDecimal valorCalculado = computeTaxTransaction(data);
 
-        double saldoInicial = 0.0;
+        Optional<Account> optAccount = Optional.ofNullable(accountRepository.findAccountByAtivoTrue(data.numeroConta()));
+
+        BigDecimal saldoInicial;
 
         saldoInicial = optAccount.get().getSaldo();
 
-        double saldo = 0.0;
-        saldo = saldoInicial - valorCalculado;
+        BigDecimal saldo;
+        saldo = saldoInicial.subtract(valorCalculado);
 
-        var account = new Account(optAccount.get().getId(), transactions.getNumero_conta(), saldo, true);
+        // Incluir condição para validar se o saldo estiver menor que o valor para fazer a transação.
+        int negativeBalance = saldo.compareTo(valorCalculado);
+        if (negativeBalance < 0) { // Fazer algo parecido com isso...
+            throw new NegativeBalanceException("Saldo insuficiente para efetuar a transação.");
+        }
+
+        var account = new Account(optAccount.get().getId(), data.numeroConta(), saldo.setScale(2, BigDecimal.ROUND_HALF_EVEN), true);
         accountRepository.save(account);
 
-        boolean existsTransaction = false;
-        // Salvar a transação criada no Banco de Dados
-        if (optTransaction.isPresent()) {
-            if (!optTransaction.get().getId().equals(transactions.getId())) {
-                existsTransaction = true;
-            }
-        }
+        var transaction = new Transaction(data, findAccount);
+        transactionRepository.save(transaction);
 
-        Transaction saveTransaction;
-        if (existsTransaction) {
-            throw new ValidationException("Não houve registros de transações durante a operação. Id nulo ou inexistente.");
-        } else {
-            var transaction = new Transaction(transactions.getId(), transactions.getForma_pagamento(), transactions.getNumero_conta(), transactions.getValor(), saldo, account);
-            saveTransaction = transactionRepository.save(transaction);
-        }
-
-        return new DataDetailingTransaction(saveTransaction);
+        return new DataDetailingTransaction(transaction);
     }
 
-    private double computeTaxTransaction(Transaction transactions) {
-        if (transactions.getForma_pagamento() == null) {
+    private BigDecimal computeTaxTransaction(DataRegistrationTransaction transactions) {
+        if (transactions.formaPagamento() == null) {
             throw new ValidationException("É obrigatório informar a forma de pagamento para validar o processo de transação.");
         }
-        double taxTransaction = 0.0;
-        PaymentForm paymentForm = transactions.getForma_pagamento();
+        BigDecimal taxTransaction;
+        PaymentForm paymentForm = transactions.formaPagamento();
 
-        taxTransaction = paymentForm.computeTaxTransaction(transactions.getValor());
+        taxTransaction = paymentForm.computeTaxTransaction(transactions.valor());
 
         return taxTransaction;
     }

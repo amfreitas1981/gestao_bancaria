@@ -1,5 +1,7 @@
 package com.banking.account.transact.infra.exception;
 
+import com.banking.account.transact.domain.AccountNotFoundException;
+import com.banking.account.transact.domain.NegativeBalanceException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class TreatErrors {
+
+    @ExceptionHandler(NegativeBalanceException.class)
+    public ResponseEntity treatErrorNegativeBalance() {
+        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
+    }
+
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity treatErrorAccountNotFound() {
+        return ResponseEntity.notFound().build();
+    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity treatError404() {
@@ -51,7 +63,7 @@ public class TreatErrors {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + ex.getLocalizedMessage());
     }
 
-    private record DataErrorValidation(String field, String message){
+    record DataErrorValidation(String field, String message){
         public DataErrorValidation(FieldError error){
             this(error.getField(), error.getDefaultMessage());
         }

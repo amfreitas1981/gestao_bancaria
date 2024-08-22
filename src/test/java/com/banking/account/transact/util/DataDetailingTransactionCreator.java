@@ -2,13 +2,15 @@ package com.banking.account.transact.util;
 
 import com.banking.account.transact.domain.transaction.DataDetailingTransaction;
 
+import java.math.BigDecimal;
+
 public class DataDetailingTransactionCreator {
 
     public static DataDetailingTransaction createDataDetailingTransactionToBeSaved() {
         return new DataDetailingTransaction(
                 null,
                 "234",
-                184.42
+                new BigDecimal(184.42)
         );
     }
 
@@ -16,7 +18,7 @@ public class DataDetailingTransactionCreator {
         return new DataDetailingTransaction(
                 1L,
                 "234",
-                184.42
+                new BigDecimal(184.42)
         );
     }
 
@@ -24,7 +26,7 @@ public class DataDetailingTransactionCreator {
         return new DataDetailingTransaction(
                 1L,
                 "234",
-                137.26
+                new BigDecimal(137.26)
         );
     }
 }

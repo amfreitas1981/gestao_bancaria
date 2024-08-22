@@ -19,7 +19,7 @@ public class AccountService {
     public Account saveAccount(Account account) {
         boolean existsAccount = false;
 
-        Optional<Account> optAccount = Optional.ofNullable(accountRepository.findAccountByAtivoTrue(account.getNumero_conta()));
+        Optional<Account> optAccount = Optional.ofNullable(accountRepository.findAccountByAtivoTrue(account.getNumeroConta()));
 
         if (optAccount.isPresent()){
             if (!optAccount.get().getId().equals(account.getId())){

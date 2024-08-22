@@ -4,6 +4,7 @@ import com.banking.account.transact.domain.accounts.Account;
 import com.banking.account.transact.domain.transaction.PaymentForm;
 import com.banking.account.transact.domain.transaction.Transaction;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,16 +13,21 @@ public class TransactionCreator {
     public static List<Transaction> transactions = Collections.singletonList(new Transaction(
             3L,
             PaymentForm.C,
-            "233",
-            40.04,
-            147.86,
+            new BigDecimal(40.04),
             Account.builder().build()
     ));
 
     public static Account account = new Account(
             1L,
             "147",
-            185.56,
+            new BigDecimal(185.56),
+            true
+    );
+
+    public static Account accountNull = new Account(
+            null,
+            null,
+            null,
             true
     );
 
@@ -29,10 +35,8 @@ public class TransactionCreator {
         return new Transaction(
                 null,
                 PaymentForm.P,
-                "254",
-                10.04,
-                1478.63,
-                Account.builder().build()
+                new BigDecimal(10.04),
+                account
         );
     }
 
@@ -40,10 +44,8 @@ public class TransactionCreator {
         return new Transaction(
                 1L,
                 PaymentForm.P,
-                "254",
-                10.04,
-                1478.63,
-                Account.builder().build()
+                new BigDecimal(10.04),
+                account
         );
     }
 
@@ -51,10 +53,8 @@ public class TransactionCreator {
         return new Transaction(
                 1L,
                 PaymentForm.D,
-                "254",
-                10.04,
-                1478.63,
-                Account.builder().build()
+                new BigDecimal(10.04),
+                account
         );
     }
 }

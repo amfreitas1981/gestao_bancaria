@@ -2,23 +2,25 @@ package com.banking.account.transact.domain.transaction;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+import java.math.BigDecimal;
+
 public enum PaymentForm implements ComputeTransactionRepository {
     P {
         @Override
-        public double computeTaxTransaction(double valor){
+        public BigDecimal computeTaxTransaction(BigDecimal valor){
             return valor;
         }
     },
     C {
         @Override
-        public double computeTaxTransaction(double valor){
-            return valor * 0.05 + valor;
+        public BigDecimal computeTaxTransaction(BigDecimal valor){
+            return valor.multiply(BigDecimal.valueOf(0.05)).add(valor);
         }
     },
     D {
         @Override
-        public double computeTaxTransaction(double valor){
-            return valor * 0.03 + valor;
+        public BigDecimal computeTaxTransaction(BigDecimal valor){
+            return valor.multiply(BigDecimal.valueOf(0.03)).add(valor) ;
         }
     };
 

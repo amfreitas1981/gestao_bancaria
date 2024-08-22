@@ -1,80 +1,98 @@
 package com.banking.account.transact.domain.accounts;
 
-import org.junit.jupiter.api.DisplayName;
+import com.banking.account.transact.domain.ValidationException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
-import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@AutoConfigureJsonTesters
+@ExtendWith(MockitoExtension.class)
 class AccountServiceTest {
-
-    @InjectMocks
-    private AccountService accountService;
 
     @Mock
     private AccountRepository accountRepository;
 
-    @Captor
-    ArgumentCaptor<Account> argumentCaptor;
+    @InjectMocks
+    private AccountService accountService;
 
-    @Test
-    @DisplayName("Deve salvar conta com sucesso")
-    void saveAccountSuccess() {
-        // Arrange
-        Account account = new Account();
-        account.setId(1L);
-        account.setNumero_conta("234");
-        account.setSaldo(180.37);
-        account.setAtivo(true);
+    private Account account;
 
-        when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
-        when(accountRepository.findAccountByAtivoTrue(account.getNumero_conta())).thenReturn(account);
-
-        // Action
-        accountService.saveAccount(account);
-
-        // Assertions
-        Mockito.verify(accountRepository).findAccountByAtivoTrue(account.getNumero_conta());
-
-        Mockito.verify(accountRepository).save(argumentCaptor.capture());
-        Account saveAccount = argumentCaptor.getValue();
-
-        assertThat(saveAccount.getId()).isNotNull();
-        assertThat(saveAccount.getNumero_conta()).isNotNull();
+    @BeforeEach
+    void setUp() {
+        account = Account.builder()
+                .id(1L)
+                .numeroConta("123456")
+                .saldo(BigDecimal.valueOf(1000))
+                .ativo(true)
+                .build();
     }
 
     @Test
-    @DisplayName("Erro ao tentar salvar conta")
-    void saveAccountError() {
-        // Arrange
-        Account account = new Account();
-        account.setId(1L);
-        account.setNumero_conta(null);
-        account.setSaldo(180.37);
-        account.setAtivo(true);
+    void shouldSaveNewAccountSuccessfully() {
+        when(accountRepository.findAccountByAtivoTrue(anyString())).thenReturn(null);
+        when(accountRepository.save(any(Account.class))).thenReturn(account);
 
-        when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
-        when(accountRepository.findAccountByAtivoTrue(account.getNumero_conta())).thenReturn(account);
+        Account savedAccount = accountService.saveAccount(account);
 
-        // Action
-        accountService.saveAccount(account);
+        assertNotNull(savedAccount);
+        assertEquals("123456", savedAccount.getNumeroConta());
+        verify(accountRepository, times(1)).findAccountByAtivoTrue(anyString());
+        verify(accountRepository, times(1)).save(any(Account.class));
+    }
 
-        // Assertions
-        Mockito.verify(accountRepository).findAccountByAtivoTrue(account.getNumero_conta());
+    @Test
+    void shouldThrowExceptionWhenAccountAlreadyExists() {
+        Account existingAccount = Account.builder()
+                .id(2L)
+                .numeroConta("123456")
+                .saldo(BigDecimal.valueOf(2000))
+                .ativo(true)
+                .build();
 
-        Mockito.verify(accountRepository).save(argumentCaptor.capture());
-        Account saveAccount = argumentCaptor.getValue();
+        when(accountRepository.findAccountByAtivoTrue(anyString())).thenReturn(existingAccount);
 
-        assertThat(saveAccount.getId()).isNotNull();
-        assertThat(saveAccount.getNumero_conta()).isNull();
+        ValidationException exception = assertThrows(ValidationException.class, () -> accountService.saveAccount(account));
+
+        assertEquals("Conta já cadastrada!", exception.getMessage());
+        verify(accountRepository, times(1)).findAccountByAtivoTrue(anyString());
+        verify(accountRepository, never()).save(any(Account.class));
+    }
+
+    @Test
+    void shouldFindActiveAccountByAccountNumber() {
+        when(accountRepository.findAccountByAtivoTrue(anyString())).thenReturn(account);
+
+        Optional<Account> foundAccount = accountService.findAccount("123456");
+
+        assertTrue(foundAccount.isPresent());
+        assertEquals("123456", foundAccount.get().getNumeroConta());
+        verify(accountRepository, times(1)).findAccountByAtivoTrue(anyString());
+    }
+
+    @Test
+    void shouldNotFindInactiveAccountByAccountNumber() {
+        when(accountRepository.findAccountByAtivoTrue(anyString())).thenReturn(null);
+
+        Optional<Account> foundAccount = accountService.findAccount("123456");
+
+        assertFalse(foundAccount.isPresent());
+        verify(accountRepository, times(1)).findAccountByAtivoTrue(anyString());
     }
 }
