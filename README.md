@@ -285,6 +285,8 @@ http://localhost:8080/v3/api-docs
 > + Spring Security;
 > + JWT;
 > + Swagger;
+> + JUnit5;
+> + Mockito;
 > + GitHub;
 > + Insomnia;
 > + Postman;
