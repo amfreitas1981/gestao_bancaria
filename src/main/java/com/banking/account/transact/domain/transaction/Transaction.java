@@ -1,7 +1,6 @@
 package com.banking.account.transact.domain.transaction;
 
 import com.banking.account.transact.domain.accounts.Account;
-import com.banking.account.transact.domain.accounts.DataDetailingAccount;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,13 +10,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
 
 @Table(name = "transacoes")
 @Entity(name = "Transaction")
@@ -29,31 +30,23 @@ import lombok.NoArgsConstructor;
 public class Transaction {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private PaymentForm forma_pagamento;
+    @Column(name = "forma_pagamento")
+    private PaymentForm formaPagamento;
 
-    private String numero_conta;
+    @Column(name = "valor")
+    private BigDecimal valor;
 
-    private Double valor;
-
-    private Double saldo;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "conta_id")
     private Account account;
 
-    public Transaction(DataRegistrationTransaction data) {
-        this.forma_pagamento = data.forma_pagamento();
-        this.numero_conta = data.numero_conta();
-        this.valor = data.valor();
-    }
-
-    public Transaction(DataDetailingAccount data) {
-        this.numero_conta = data.numero_conta();
-        this.saldo = data.saldo();
+    public Transaction(DataRegistrationTransaction request, Account account) {
+        this.formaPagamento = request.formaPagamento();
+        this.valor = request.valor();
+        this.account = account;
     }
 }

@@ -13,6 +13,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Table(name = "contas")
 @Entity(name = "Account")
 @Setter
@@ -24,24 +26,25 @@ import lombok.Setter;
 public class Account {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String numero_conta;
+    @Column(name = "numero_conta")
+    private String numeroConta;
 
-    private Double saldo;
+    @Column(name = "saldo")
+    private BigDecimal saldo;
 
+    @Column(name = "ativo")
     private Boolean ativo;
 
-    public Account(DataRegistrationAccount data){
-        this.numero_conta = data.numero_conta();
+    public Account(DataDetailingAccount data){
+        this.numeroConta = data.numeroConta();
         this.saldo = data.saldo();
-        this.ativo = true;
     }
 
-    public Account(DataDetailingAccount data){
-        this.numero_conta = data.numero_conta();
+    public Account(DataRegistrationAccount data) {
+        this.numeroConta = data.numeroConta();
         this.saldo = data.saldo();
     }
 

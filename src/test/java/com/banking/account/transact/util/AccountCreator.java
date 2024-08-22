@@ -2,7 +2,7 @@ package com.banking.account.transact.util;
 
 import com.banking.account.transact.domain.accounts.Account;
 
-import static com.banking.account.transact.util.TransactionCreator.transactions;
+import java.math.BigDecimal;
 
 public class AccountCreator {
 
@@ -10,7 +10,7 @@ public class AccountCreator {
         return new Account(
                 null,
                 "178964",
-                405.83,
+                new BigDecimal(405.83),
                 true
         );
     }
@@ -18,8 +18,8 @@ public class AccountCreator {
     public static Account createAccountValid() {
         return new Account(
                 1L,
-                "164514",
-                405.83,
+                "235",
+                new BigDecimal(180.38),
                 true
         );
     }
@@ -28,7 +28,7 @@ public class AccountCreator {
         return new Account(
                 1L,
                 "174591",
-                919.56,
+                new BigDecimal(919.56),
                 true
         );
     }

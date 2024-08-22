@@ -1,15 +1,17 @@
 package com.banking.account.transact.domain.transaction;
 
+import java.math.BigDecimal;
+
 public record DataDetailingTransaction(
         Long id,
-        String numero_conta,
-        Double saldo) {
+        String numeroConta,
+        BigDecimal saldo) {
 
     public DataDetailingTransaction(Transaction transaction) {
         this(
                 transaction.getId(),
-                transaction.getNumero_conta(),
-                transaction.getSaldo()
+                transaction.getAccount().getNumeroConta(),
+                transaction.getAccount().getSaldo()
         );
     }
 }

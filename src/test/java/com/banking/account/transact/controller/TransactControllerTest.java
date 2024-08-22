@@ -1,79 +1,56 @@
 package com.banking.account.transact.controller;
 
-//import com.banking.account.transact.domain.transaction.DataDetailingTransaction;
-//import com.banking.account.transact.domain.transaction.DataRegistrationTransaction;
-//import com.banking.account.transact.domain.transaction.PaymentForm;
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Test;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
-//import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.boot.test.json.JacksonTester;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.MediaType;
-//import org.springframework.security.test.context.support.WithMockUser;
-//import org.springframework.test.web.servlet.MockMvc;
-//
-//import static org.assertj.core.api.Assertions.assertThat;
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-//
-//@SpringBootTest
-//@AutoConfigureMockMvc
-//@AutoConfigureJsonTesters
-//class TransactControllerTest {
-//
-//    @Autowired
-//    private MockMvc mvc;
-//
-//    @Autowired
-//    private JacksonTester<DataRegistrationTransaction> dataRegistrationTransactionJson;
-//
-//    @Autowired
-//    private JacksonTester<DataDetailingTransaction> dataDetailingTransactionJson;
-//
-////    @MockBean
-////    private TransactionService transactionService;
-////
-////    @MockBean
-////    private AccountService accountService;
-//
-//    @Test
-//    @DisplayName("Deveria devolver código http 404, quando informações estão inválidas")
-//    @WithMockUser
-//    void createTransactionScenario1() throws Exception {}
-//
-//    @Test
-//    @DisplayName("Deveria devolver código http 201, quando informações estão inválidas")
-//    @WithMockUser
-//    void createTransactionScenario2() throws Exception {
-//        DataRegistrationTransaction dataRegistrationTransaction = new DataRegistrationTransaction(
-//                null,
-//                PaymentForm.C,
-//                "235",
-//                11.11
-//        );
-//
-////        when(transactionService.saveTransaction(any())).thenReturn(dataRegistrationTransaction);
-//
-//        var response = mvc
-//                .perform(
-//                        post("/transacao")
-//                                .contentType(MediaType.APPLICATION_JSON)
-//                                .content(dataRegistrationTransactionJson.write(dataRegistrationTransaction).getJson())
-//                )
-//                .andReturn().getResponse();
-//
-//        DataDetailingTransaction dataDetailingTransaction = new DataDetailingTransaction(
-//                null,
-//                "235",
-//                184.42
-//        );
-//
-//        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
-//
-//        String jsonEsperado = dataDetailingTransactionJson.write(dataDetailingTransaction).getJson();
-//
-//        assertThat(response.getContentAsString()).isEqualTo(jsonEsperado);
-//    }
-//}
+import com.banking.account.transact.domain.transaction.DataDetailingTransaction;
+import com.banking.account.transact.domain.transaction.DataRegistrationTransaction;
+import com.banking.account.transact.domain.transaction.PaymentForm;
+import com.banking.account.transact.domain.transaction.TransactionService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.math.BigDecimal;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+public class TransactControllerTest {
+
+    @Mock
+    private TransactionService transactionService;
+
+    @InjectMocks
+    private TransactController transactController;
+
+    @BeforeEach
+    public void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    public void testCreateTransaction() {
+        // Arrange
+        DataRegistrationTransaction request = new DataRegistrationTransaction(
+                PaymentForm.C, // Supondo que você tenha um enum PaymentForm com CREDIT_CARD
+                new BigDecimal("100.00"),
+                "123456789"
+        );
+        DataDetailingTransaction detailingTransaction = new DataDetailingTransaction(1L, "123456789", new BigDecimal("100.00"));
+
+        when(transactionService.saveTransaction(any(DataRegistrationTransaction.class))).thenReturn(detailingTransaction);
+
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString("http://localhost");
+
+        // Act
+        ResponseEntity<DataDetailingTransaction> response = transactController.createTransaction(request, uriBuilder);
+
+        // Assert
+        assertEquals(201, response.getStatusCodeValue());
+        assertEquals(detailingTransaction, response.getBody());
+    }
+}
+

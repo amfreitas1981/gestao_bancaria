@@ -20,6 +20,10 @@ public class TokenService {
 
     public String generateToken(Username username){
         try {
+            if (secret == null) {
+                // Gera uma exceção específica para o caso do segredo ser nulo
+                throw new JWTCreationException("The Secret cannot be null", null);
+            }
             var algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withIssuer(ISSUER)

@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,17 +29,21 @@ public class AccountController {
     private AccountService accountService;
 
     @PostMapping
-    public ResponseEntity<DataDetailingAccount> createAccount(@RequestBody @Valid DataRegistrationAccount data, UriComponentsBuilder uriBuilder) {
-        var account = new Account(data);
+    @Transactional
+    public ResponseEntity<DataDetailingAccount> createAccount(@RequestBody @Valid DataRegistrationAccount request, UriComponentsBuilder uriBuilder) {
+        var account = new Account(request);
         accountService.saveAccount(account);
-        var uri = uriBuilder.path("/conta/{id}").buildAndExpand(account.getId()).toUri();
+        var uri = uriBuilder
+                .path("/conta/{id}")
+                .buildAndExpand(account.getId())
+                .toUri();
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new DataDetailingAccount(account));
     }
 
     @GetMapping
-    public ResponseEntity<DataDetailingAccount> findAccount(String numero_conta) {
-        Optional<Account> optionalAccount = accountService.findAccount(numero_conta);
+    public ResponseEntity<DataDetailingAccount> findAccount(String numeroConta) {
+        Optional<Account> optionalAccount = accountService.findAccount(numeroConta);
 
         if (optionalAccount.isEmpty()) {
             return new TreatErrors().treatError404();
